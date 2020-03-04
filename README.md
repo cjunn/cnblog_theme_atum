@@ -137,6 +137,7 @@ window.__BLOG_CONFIG__=p;
 具体效果可至 [点我跳转](https://www.cnblogs.com/cjunn/) 查看。
 
 ## 最后
+- 开源地址[Gitee](https://gitee.com/cjunn/cnblog_theme_atum.git)、[Github](https://github.com/cjunn/cnblog_theme_atum.git)，求些小星星嗯。
 - 感谢 [@YJLAugus](https://www.cnblogs.com/yjlaugus/) 在该主题不断代码迭代的时候提供的宝贵意见。
 - 源码目前已开源、方便具有开发经验的人进行二次开发、但恳请您二次开发时能够保留相应的作者信息。
 - 如果你有多余的RMB的话，可以赏我吃颗糖么。
