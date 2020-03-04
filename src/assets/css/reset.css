@@ -1,0 +1,100 @@
+*::selection {
+  background-color: #3a3f51;
+  color: white;
+}
+
+body {
+  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu !important;
+  color: rgb(50, 50, 50);
+  cursor: default;
+}
+
+pre code {
+  cursor: text;
+}
+
+/* 清除内外边距 */
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* structural elements 结构元素 */
+dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
+pre, /* text formatting elements 文本格式元素 */
+fieldset, lengend, button, input, textarea, /* form elements 表单元素 */
+th, td { /* table elements 表格元素 */
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.none-base-scroll::-webkit-scrollbar {
+  display: none
+}
+
+.small-base-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: #F5F5F5;
+}
+
+.small-base-scroll::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #F5F5F5;
+}
+
+
+.small-base-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #C0C0C0;
+}
+
+.small-base-scroll::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #c8c8c8;
+}
+
+.middle-base-scroll::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+  background-color: #F5F5F5;
+}
+
+.middle-base-scroll::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+.middle-base-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #C0C0C0;
+}
+
+.middle-base-scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #c8c8c8;
+}
+
+.three-ellipsis {
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.double-ellipsis {
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.sing-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}

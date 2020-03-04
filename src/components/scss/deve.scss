@@ -1,0 +1,187 @@
+@charset "utf-8";
+//各种分辨率设置
+@mixin deve1 {
+  @media only screen and (max-width: 468px) {
+    @content;
+  }
+}
+
+@mixin deve2 {
+  @media only screen and (min-width: 469px) and (max-width: 549px) {
+    @content;
+  }
+}
+
+@mixin deve3 {
+  @media only screen and (min-width: 550px) and (max-width: 899px) {
+    @content;
+  }
+}
+
+@mixin deve4 {
+  @media only screen and (min-width: 900px) and (max-width: 1074px) {
+    @content;
+  }
+}
+
+@mixin deve5 {
+  @media only screen and (min-width: 1075px) and (max-width: 1249px) {
+    @content;
+  }
+}
+
+@mixin deve6 {
+  @media only screen and (min-width: 1250px) and (max-width: 1420px) {
+    @content;
+  }
+}
+
+@mixin deve7 {
+  @media only screen and (min-width: 1421px) {
+    @content;
+  }
+}
+
+@mixin deve-cal-width($d1,$d2,$d3,$d4,$d5,$d6,$d7) {
+  @include deve1 {
+    width: calc(100% - #{$d1});
+  }
+  @include deve2 {
+    width: calc(100% - #{$d2});
+  }
+  @include deve3 {
+    width: calc(100% - #{$d3});
+  }
+  @include deve4 {
+    width: calc(100% - #{$d4});
+  }
+  @include deve5 {
+    width: calc(100% - #{$d5});
+  }
+  @include deve6 {
+    width: calc(100% - #{$d6});
+  }
+  @include deve7 {
+    width: calc(100% - #{$d7});
+  }
+}
+
+@mixin deve-width($d1,$d2,$d3,$d4,$d5,$d6,$d7) {
+  @include deve1 {
+    width: $d1;
+  }
+  @include deve2 {
+    width: $d2;
+  }
+  @include deve3 {
+    width: $d3;
+  }
+  @include deve4 {
+    width: $d4;
+  }
+  @include deve5 {
+    width: $d5;
+  }
+  @include deve6 {
+    width: $d6;
+  }
+  @include deve7 {
+    width: $d7;
+  }
+}
+
+@mixin deve-right($d1,$d2,$d3,$d4,$d5,$d6,$d7) {
+  @include deve1 {
+    right: $d1;
+  }
+  @include deve2 {
+    right: $d2;
+  }
+  @include deve3 {
+    right: $d3;
+  }
+  @include deve4 {
+    right: $d4;
+  }
+  @include deve5 {
+    right: $d5;
+  }
+  @include deve6 {
+    right: $d6;
+  }
+  @include deve7 {
+    right: $d7;
+  }
+}
+
+@mixin deve-margin-right($d1,$d2,$d3,$d4,$d5,$d6,$d7) {
+  @include deve1 {
+    margin-right: $d1;
+  }
+  @include deve2 {
+    margin-right: $d2;
+  }
+  @include deve3 {
+    margin-right: $d3;
+  }
+  @include deve4 {
+    margin-right: $d4;
+  }
+  @include deve5 {
+    margin-right: $d5;
+  }
+  @include deve6 {
+    margin-right: $d6;
+  }
+  @include deve7 {
+    margin-right: $d7;
+  }
+}
+
+@mixin deve-display($d1,$d2,$d3,$d4,$d5,$d6,$d7) {
+  @include deve1 {
+    display: $d1;
+  }
+  @include deve2 {
+    display: $d2;
+  }
+  @include deve3 {
+    display: $d3;
+  }
+  @include deve4 {
+    display: $d4;
+  }
+  @include deve5 {
+    display: $d5;
+  }
+  @include deve6 {
+    display: $d6;
+  }
+  @include deve7 {
+    display: $d7;
+  }
+}
+
+@mixin deve-left($d1,$d2,$d3,$d4,$d5,$d6,$d7) {
+  @include deve1 {
+    left: $d1;
+  }
+  @include deve2 {
+    left: $d2;
+  }
+  @include deve3 {
+    left: $d3;
+  }
+  @include deve4 {
+    left: $d4;
+  }
+  @include deve5 {
+    left: $d5;
+  }
+  @include deve6 {
+    left: $d6;
+  }
+  @include deve7 {
+    left: $d7;
+  }
+}
