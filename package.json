@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "highlight.js": "^9.18.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "vue": "^2.5.2",
     "vue-bus": "^1.2.1",
     "vue-router": "^3.0.1"
