@@ -19,7 +19,7 @@
 
 ### 代码构建
 ```
-git clone https://github.com/esofar/cnblogs-theme-silence.git   # 克隆源码
+git clone https://github.com/cjunn/cnblog_theme_atum.git   # 克隆源码
 cd cnblogs-theme-silence                                        # 进入项目
 npm install                                                     # 安装依赖
 npm run build                                                   # 重新构建
