@@ -1,41 +1,24 @@
-import BlogConst from "../const/BlogConst";
-
-let anchor;
-/*外部跳转进来*/
-if (window.location.hash && !window.location.hash.startsWith("#" + process.env.VUE_CTX)) {
-//存在HASH且HASH不符合该插件规范
-  anchor = window.location.hash;
-  anchor = anchor.replace("#", "");
-  anchor = anchor.replace("/", "");
-}
-
-
+import BlogContext from "../context/BlogContext";
 let matchUrlType = (pathname) => {
-  let regexp;
-  /*请求打开文章*/
-  regexp = new RegExp("^/" + BlogConst.blogAcc + "/p/(.+)?\.html");
-  if (regexp.test(pathname)) {
-    let param = pathname.match(regexp)[1];
-    return '/works/article/' + param;
+  let regexps=[
+    /*请求打开文章*/
+    new RegExp("^/" + BlogContext.blogAcc + "/p/(.+)?\.html"),
+    /*请求打开类别*/
+    new RegExp("^/" + BlogContext.blogAcc + "/category/(.+)?\.html")
+  ];
+  for(let i in regexps){
+    if(regexps[i].test(pathname)){
+      return '/subject'+pathname.replace("/"+BlogContext.blogAcc,"");
+    }
   }
-  /*请求打开类别*/
-  regexp = new RegExp("^/" + BlogConst.blogAcc + "/category/(.+)?\.html");
-  if (regexp.test(pathname)) {
-    let param = pathname.match(regexp)[1];
-    return '/works/category/category/' + param + '/1';
-  }
-
 };
 export default {
   redirect: function (e) {
     let pathname = window.location.pathname;
     let relPath = matchUrlType(pathname);
-    relPath = relPath ? relPath : '/works/category/all/1/1';
+    relPath = relPath ? relPath : '/subject/category/default.html';
     return {
-      path: process.env.VUE_CTX + relPath,
-      query: {
-        anchor: anchor
-      }
+      path: process.env.VUE_CTX + relPath
     };
   }
 }

@@ -1,37 +1,16 @@
 <template>
   <div id="blog_panel">
     <blog-full-page></blog-full-page>
-    <blog-head class="blog-head-oub-wrap"></blog-head>
-    <div class="blog-head-oub-body">
-      <blog-aside></blog-aside>
-      <div class="loading-bar">
-        <div class="preloaderbar show active" :class="{'preloaderbarShow':isShowLoadingBar}">
-          <span class="bar"></span>
-        </div>
-      </div>
-      <div class="body-wrap none-base-scroll"
-           ref="panel"
-           @scroll="panelScrollEvent"
-           :class="{'stop-scroll':isShowLoading}"
-           @transitionEvent="transitionEvent"
-      >
+    <blog-head-bar class="blog-head-bar"></blog-head-bar>
+    <div class="main-panel">
+      <panel-aside id="panel_aside" class="panel-aside" :class="{'blog-aside-show':asideIsShow,'blog-aside-hide':!asideIsShow}"></panel-aside>
+      <div class="panel-aside-shape" :class="!asideIsShow?'panel-aside-shape-hide':''" @click="asideIsShow=false">sss</div>
+      <loading-bar ref="loadingBar" class="loading-bar-clz"></loading-bar>
+      <loading-body ref="loadingBody" class="loading-body-clz"></loading-body>
+      <div class="route-body none-base-scroll" ref="routerView" @scroll="panelScrollEvent">
         <div id="panel_top_target"></div>
-        <div class="loading-screen-lump" :class="{'loading-screen-lump-show':isShowLoading}">
-          <div class="loading-screen-wrap">
-            <div class="loading-screen-in">
-              <div class="k-ball-holder3">
-                <div class="k-ball7a"></div>
-                <div class="k-ball7b"></div>
-                <div class="k-ball7c"></div>
-                <div class="k-ball7d"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="route-view-screen" :class="{'route-view-screen-hide':isShowLoading}">
-          <router-view class="router-view-warp"></router-view>
-          <blog-bottom class="router-bottom-wrap"></blog-bottom>
-        </div>
+        <router-view  class="router-view-wrap" ref="routeViewWrap" :style="{'min-Height':this.routeMinHeight+'px'}"></router-view>
+        <blog-bottom></blog-bottom>
         <div id="panel_bottom_target"></div>
       </div>
     </div>
@@ -39,396 +18,190 @@
 </template>
 
 <script>
-    import BlogHead from "./head/BlogHead";
-    import BlogAside from "./aside/BlogAside";
-    import BlogBottom from "./bottom/BlogBottom";
-    import BlogFullPage from "./full/BlogFullPage";
+  import BlogHeadBar from "./head/BlogHeadBar";
+  import PanelAside from "./aside/PanelAside";
+  import ArticlesBody from "./body/CategoryBody";
+  import RouteBody from "./body/SubjectBody";
+  import LoadingBody from "./common/LoadingBody";
+  import LoadingBar from "./common/LoadingBar";
+  import BlogBottom from "./bottom/BlogBottom";
+  import BlogFullPage from "./full/BlogFullPage";
 
-    export default {
-        name: "BlogPanel",
-        components: {BlogFullPage, BlogBottom, BlogAside, BlogHead},
-        mounted: function () {
-            let callback = (e) => {
-                if (e.propertyName == "opacity") {
-                    this.$refs.panel.scrollTop = 0;
-                }
-            };
-            this.$refs.panel.addEventListener('transitionend', callback);
-            this.$refs.panel.addEventListener('webkitTransitionEnd', callback);
+  export default {
+    name: "BlogPanel",
+    methods: {
+      panelScrollEvent:function(e){
+        this.$bus.emit("panelScrollEven", e);
+      }
+    },
+    data: () => {
+      return {
+        loading: true,
+        lastPageId:'',
+        routeMinHeight:'',
+        asideIsShow:false
+      }
+    },
+    created: function () {
+    },
+    components: {
+      BlogFullPage,
+      BlogBottom, LoadingBar, LoadingBody, RouteBody, ArticlesBody, PanelAside, BlogHeadBar},
+    beforeRouteUpdate: function (to, from, next) {
+      this.$bus.emit("fullLoadingOpen", next);
+    },
+    mounted: function () {
+      /*监控滑到顶部事件*/
+      this.$bus.on("panelToTop", () => {
+        document.getElementById("panel_top_target").scrollIntoView({behavior: "smooth"});
+      });
+      /*监控滑到底部事件*/
+      this.$bus.on("panelToBottom", () => {
+        document.getElementById("panel_bottom_target").scrollIntoView({behavior: "smooth"});
+      });
+      /*小屏切换顶部设置界面*/
+      this.$bus.on("switchPanelAside",()=>{
+        this.asideIsShow=!this.asideIsShow;
+      });
+      /*全屏加载开启*/
+      this.$bus.on("fullLoadingOpen", (next) => {
+        this.$nextTick(() => {
+          this.$refs.loadingBody?this.$refs.loadingBody.openLoading(() => {
+            next?next():'';
+            this.$refs.routerView.scrollTo(0, 0);
+          }):'';
 
-        },
-        created: function () {
-            this.$bus.on("panelToTop", () => {
-                document.getElementById("panel_top_target").scrollIntoView({behavior: "smooth"});
-            });
-            this.$bus.on("panelToBottom", () => {
-                document.getElementById("panel_bottom_target").scrollIntoView({behavior: "smooth"});
-            });
-            this.$bus.on("openLoadingBar", (param) => {
-                this.isShowLoadingBar = true;
-            });
-            this.$bus.on("closeLoadingBar", (param) => {
-                this.isShowLoadingBar = false;
-            });
-            this.$bus.on('beforeRoute', (param) => {
-                this.isShowLoading = true;
-                setTimeout(() => {
-                    param.next();
-                }, 300);
-            });
-            this.$bus.on('afterRoute', (param) => {
-            });
-            this.$bus.on('dataedRoute', (params) => {
-                /*关闭加载中*/
-                this.isShowLoading = false;
-            });
-            this.$bus.on('anchorScroll', (anchor) => {
-                /*初始化锚点*/
-                let query = this.$route.query;
-                if (query && query.anchor) {
-                    let anchorDom = document.querySelector("#app [href='#" + anchor + "']");
-                    anchorDom ? anchorDom.scrollIntoView({behavior: "auto"}) : '';
-                    delete this.$route.query.anchor;
-                }
-            });
-        },
-        methods: {
-            panelScrollEvent: function (e) {
-                this.$bus.emit("panelScrollEven", e);
-            },
-            transitionEvent: function (e) {
-            }
-        },
-        data: () => {
-            return {
-                isShowLoading: false,
-                isShowLoadingBar: false,
-                include: 'BlogWorksBody,BlogAuthorBody'
-            }
-        },
+        })
+      });
+      /*全屏加载关闭*/
+      this.$bus.on("fullLoadingClose", () => {
+        this.$nextTick(() => {
+          this.$refs.loadingBody?this.$refs.loadingBody.closeLoading():'';
+        })
+      });
+      /*条加载开启*/
+      this.$bus.on("barLoadingOpen", () => {
+        this.$nextTick(()=>{
+          this.$refs.loadingBar?this.$refs.loadingBar.openLoadingBar():'';
+        })
+      });
+      /*条加载关闭*/
+      this.$bus.on("barLoadingClose", () => {
+        this.$nextTick(()=>{
+          this.$refs.loadingBar?this.$refs.loadingBar.closeLoadingBar():'';
+        })
+      });
+      this.routeMinHeight=(this.$refs.routerView.clientHeight-40);
     }
+  }
 </script>
 
 <style lang="scss">
   #blog_panel {
+    display: inline-block;
     @include panelWidth();
     height: 100%;
-    margin: 0 auto;
-    opacity: 0.98;
+    text-align: left;
+    font-size: 0px;
     position: relative;
-    overflow: hidden;
-
-    .blog-head-oub-wrap {
-      position: fixed;
-      z-index: 0;
-      @include panelWidth();
-      top: 0;
+    box-shadow: 0 0 4px 3px rgba(0,0,0,.05);
+    opacity: .98;
+    .blog-head-bar {
+      height: $headHeight;
+      z-index: 10;
     }
 
-    .blog-head-oub-body {
-      position: fixed;
-      @include panelWidth();
-      top: $headHeight;
+    .main-panel {
       height: calc(100% - #{$headHeight});
-      z-index: -1;
-    }
+      position: relative;
+      left: 0;
 
-    .stop-scroll {
-      overflow-y: hidden !important;
-    }
 
-    .body-wrap {
-      font-size: 0px;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0px;
-      background-color: #f9f9f9;
-      display: inline-block;
-      overflow-x: hidden;
-      overflow-y: scroll;
-      overflow-scrolling:touch;
-      -webkit-overflow-scrolling:touch;
-      @include panelLeft();
-
-      .loading-screen-lump {
-        font-size: 12px;
-        position: fixed;
-        z-index: 2;
-        height: 85px;
-        box-sizing: border-box;
-        transform: translateY(-100%);
-        transition: all .25s ease-in-out 0s;
-        @include panelWidth();
-        padding-right: calc(#{$asideWidth});
-        @include switchHeadBar() {
-          padding-right: 0px;
+      @include switchHeadBar(){
+        .blog-aside-show {
+          @include showAside();
         }
-
-        .loading-screen-wrap {
-          margin: 8px;
-          height: 65px;
-          background-color: white;
-          border-radius: 5px;
-          box-shadow: 0px 1px 5px rgba(80, 80, 80, 0.2);
-          text-align: center;
-
-          .loading-screen-in {
-            padding-top: 13px;
-            width: 40px;
-            height: 100%;
-            display: inline-block;
-
-            .k-ball7a {
-              border: 0;
-              margin: 0;
-              width: 16px;
-              height: 16px;
-              position: absolute;
-              border-radius: 50%;
-              animation: k-loadingO 2s ease infinite;
-              background: #19A68C;
-              animation-delay: -1.5s
-            }
-
-            .k-ball7b {
-              border: 0;
-              margin: 0;
-              width: 16px;
-              height: 16px;
-              position: absolute;
-              border-radius: 50%;
-              animation: k-loadingO 2s ease infinite;
-              background: #F63D3A;
-              animation-delay: -1s
-            }
-
-            .k-ball7c {
-              border: 0;
-              margin: 0;
-              width: 16px;
-              height: 16px;
-              position: absolute;
-              border-radius: 50%;
-              animation: k-loadingO 2s ease infinite;
-              background: #FDA543;
-              animation-delay: -0.5s
-            }
-
-            .k-ball7d {
-              border: 0;
-              margin: 0;
-              width: 16px;
-              height: 16px;
-              position: absolute;
-              border-radius: 50%;
-              animation: k-loadingO 2s ease infinite;
-              background: #193B48
-            }
-
-            @keyframes k-loadingO {
-              0%, 100% {
-                transform: translate(0)
-              }
-              25% {
-                transform: translate(160%)
-              }
-              50% {
-                transform: translate(160%, 160%)
-              }
-              75% {
-                transform: translate(0, 160%)
-              }
-            }
-          }
-        }
-
-      }
-
-      .loading-screen-lump-show {
-        transform: translateY(0);
-      }
-
-      .route-view-screen {
-        opacity: 1;
-        transition: opacity .30s ease-in-out 0s;
-        position: relative;
-        min-height: 100%;
-
-        .router-view-warp {
-          font-size: 0px;
-          padding-bottom: $bottomHeight;
-        }
-
-        .router-bottom-wrap {
-          position: absolute;
-          bottom: 0;
+        .blog-aside-hide {
+          @include hideAside();
         }
       }
-
-      .route-view-screen-hide {
-        opacity: 0;
-      }
-    }
-
-
-    .loading-bar {
-      .preloaderbarShow {
-        transform: translateY(0) !important;
-      }
-
-      //彩色横向进度条
-      .preloaderbar {
-        transition: all 0.2s ease 0s;
-        transform: translateY(-100%);
-        z-index: 1;
+      .panel-aside-shape{
+        content: "";
         position: absolute;
         top: 0;
+        bottom: 0;
         left: 0;
         right: 0;
-        height: 3px;
-        margin-bottom: -4px;
+        z-index: 3;
+        background-color: rgba(0,0,0,.3);
+        display: none;
+        @include switchHeadBar(){
+          display: inline-block;
+        }
+      }
+      .panel-aside-shape-hide{
+        display: none;
+      }
+      .panel-aside {
+        position: absolute;
+        left: 0;
+        z-index: 4;
+        transition: all 0.3s ease-out 0.1s;
+        width: 230px;
+        height: 100%;
+        display: inline-block;
+        vertical-align: top;
+        box-shadow: .8px .8px .8px rgba(0, 0, 0, .2);
+        box-sizing: border-box;
       }
 
-      .preloaderbar .bar {
-        position: absolute;
+
+      .loading-bar-clz {
         width: 100%;
-        height: 0;
-        text-indent: -9999px;
-        background-color: #23b7e5
-      }
-
-      .preloaderbar .bar:before {
         position: absolute;
-        right: 50%;
-        left: 50%;
-        height: 3px;
-        background-color: inherit;
-        content: ""
+        vertical-align: top;
+        z-index: 2;
+        width: calc(100% - 230px);
+        left: 230px;
+        @include switchHeadBar(){
+          width: 100%;
+          left: 0;
+        }
       }
 
-      .preloaderbar.active {
-        -webkit-animation: changebar 2.25s infinite 0.75s;
-        -moz-animation: changebar 2.25s infinite 0.75s;
-        animation: changebar 2.25s infinite 0.75s;
+      .loading-body-clz {
+        transition: all .25s ease-in-out 0s;
+        position: absolute;
+        vertical-align: top;
+        z-index: 2;
+        width: calc(100% - 230px);
+        left: 230px;
+        @include switchHeadBar(){
+          width: 100%;
+          left: 0;
+        }
       }
 
-      .preloaderbar.active .bar {
-        -webkit-animation: changebar 2.25s infinite;
-        -moz-animation: changebar 2.25s infinite;
-        animation: changebar 2.25s infinite;
-      }
+      .route-body {
+        background-color: #F6F8F9;
+        left: 230px;
+        width: calc(100% - 230px);
+        @include switchHeadBar(){
+          left: 0px;
+          width: 100%;
+        }
+        position: absolute;
+        top: 0;
 
-      .preloaderbar.active .bar:before {
-        -webkit-animation: movingbar 0.75s infinite;
-        -moz-animation: movingbar 0.75s infinite;
-        animation: movingbar 0.75s infinite
-      }
-
-      @-webkit-keyframes movingbar {
-        0% {
-          right: 50%;
-          left: 50%
-        }
-        99.9% {
-          right: 0;
-          left: 0
-        }
-        100% {
-          right: 50%;
-          left: 50%
-        }
-      }
-      @-moz-keyframes movingbar {
-        0% {
-          right: 50%;
-          left: 50%
-        }
-        99.9% {
-          right: 0;
-          left: 0
-        }
-        100% {
-          right: 50%;
-          left: 50%
-        }
-      }
-      @keyframes movingbar {
-        0% {
-          right: 50%;
-          left: 50%
-        }
-        99.9% {
-          right: 0;
-          left: 0
-        }
-        100% {
-          right: 50%;
-          left: 50%
-        }
-      }
-      @-webkit-keyframes changebar {
-        0% {
-          background-color: #8BC34A
-        }
-        33.3% {
-          background-color: #8BC34A
-        }
-        33.33% {
-          background-color: #FFCA28
-        }
-        66.6% {
-          background-color: #FFCA28
-        }
-        66.66% {
-          background-color: #F44336
-        }
-        99.9% {
-          background-color: #F44336
-        }
-      }
-      @-moz-keyframes changebar {
-        0% {
-          background-color: #8BC34A
-        }
-        33.3% {
-          background-color: #8BC34A
-        }
-        33.33% {
-          background-color: #FFCA28
-        }
-        66.6% {
-          background-color: #FFCA28
-        }
-        66.66% {
-          background-color: #F44336
-        }
-        99.9% {
-          background-color: #F44336
-        }
-      }
-      @keyframes changebar {
-        0% {
-          background-color: #8BC34A
-        }
-        33.3% {
-          background-color: #8BC34A
-        }
-        33.33% {
-          background-color: #FFCA28
-        }
-        66.6% {
-          background-color: #FFCA28
-        }
-        66.66% {
-          background-color: #F44336
-        }
-        99.9% {
-          background-color: #F44336
+        overflow-y: scroll;
+        display: inline-block;
+        height: 100%;
+        overflow-x: hidden;
+        vertical-align: top;
+        .router-view-wrap{
+          min-height: calc(100% - 40px);
         }
       }
     }
-
-
   }
 </style>

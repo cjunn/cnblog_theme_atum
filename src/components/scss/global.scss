@@ -41,6 +41,7 @@ $commentFocusColor: rgb(184, 232, 247);
   }
 }
 
+/*处于小屏幕分辨率*/
 @mixin switchHeadBar {
   @include deve3 {
     @content;
@@ -79,21 +80,21 @@ $commentFocusColor: rgb(184, 232, 247);
 }
 
 @mixin ingAsideLeft {
-  @include deve-left(100%, 100%, 100%, 100%, 562px, 701px, 900px);
+  @include deve-left(100%, 100%, 100%, 100%, 577px, 716px, 915px);
 }
 
 @mixin ingBodyWidth {
-  @include deve-width(100%, 100%, 100%, 100%, 562px, 701px, 900px);
+  @include deve-width(100%, 100%, 100%, 100%, 577px, 716px, 915px);
 }
 
 /*作品集内侧边栏靠左位置*/
 @mixin worksAsideLeft {
-  @include deve-left(100%, 100%, 100%, 700px, 577px, 720px, 917px);
+  @include deve-left(100%, 100%, 100%, 700px, 580px, 720px, 920px);
 }
 
 /*作品集内部宽度*/
 @mixin worksBodyWidth {
-  @include deve-width(100%, 100%, 100%, 660px, 577px, 720px, 917px);
+  @include deve-width(100%, 100%, 100%, 660px, 580px, 720px, 920px);
 }
 
 /*文章简介图片宽度*/
@@ -259,7 +260,7 @@ ul.pagination li a {
 }
 
 ul.pagination li a.active {
-  background-color: rgba(58,63,81,.99);
+  background-color: rgba(58, 63, 81, .99);
   color: white;
   border-radius: 3px;
 }
@@ -363,8 +364,8 @@ li.seatClz {
 
 /*文章样式*/
 .postBody {
-  font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
 
+  font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
   video {
     width: 100%;
   }
@@ -424,7 +425,7 @@ li.seatClz {
       border: 1px solid rgba(200, 200, 200, .8);
       padding: 2px 6px 2px 6px;
       cursor: pointer;
-      min-width: 70px;
+      min-width: 60px;
     }
 
     tr {
@@ -438,7 +439,7 @@ li.seatClz {
 
 
   img {
-    width: 100%;
+    max-width: 100%;
     border-radius: 5px;
     border: 1px solid #ccc;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, .2);
@@ -469,59 +470,33 @@ li.seatClz {
 
   h1 {
     font-size: 21px;
-    counter-increment: counter_h1;
   }
 
-  h1::before {
-    content: counter(counter_h1) " ";
-  }
 
   h2 {
     font-size: 19px;
-    counter-increment: counter_h2;
   }
 
-  h2::before {
-    content: counter(counter_h1) "." counter(counter_h2) " ";
-  }
 
   h3 {
     font-size: 16px;
-    counter-increment: counter_h3;
   }
 
-  h3::before {
-    content: counter(counter_h1) "." counter(counter_h2) "." counter(counter_h3) " ";
-  }
 
   h4 {
     font-size: 14px;
-    counter-increment: counter_h4;
-  }
-
-  h4::before {
-    content: counter(counter_h1) "." counter(counter_h2) "." counter(counter_h3) "." counter(counter_h4) " ";
   }
 
   h5 {
     font-size: 12px;
-    counter-increment: counter_h5;
   }
 
-  h5::before {
-    content: counter(counter_h1) "." counter(counter_h2) "." counter(counter_h3) "." counter(counter_h4) "." counter(counter_h5) " ";
-  }
 
   h6 {
     font-size: 11px;
-    counter-increment: counter_h6;
   }
 
-  h6::before {
-    content: counter(counter_h1) "." counter(counter_h2) "." counter(counter_h3) "." counter(counter_h4) "." counter(counter_h5) "." counter(counter_h6) " ";
-  }
 }
-
 
 /*Toc样式覆盖*/
 .toc-brand {
@@ -561,4 +536,14 @@ li.seatClz {
 
 .toc-link {
   padding: 5px 20px;
+}
+
+.toc-nav {
+  overflow-y: scroll;
+  a {
+    margin-right: 11px;
+  }
+}
+.toc-nav::-webkit-scrollbar {
+  display: none
 }

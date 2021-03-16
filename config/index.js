@@ -30,11 +30,15 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/cjunn':{
+        target:'http://127.0.0.1:9090'
+      }
+    },
 
     // Various Dev Server settings
-    host: '127.0.0.1', // can be overwritten by process.env.HOST
-    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    host: 'localhost', // can be overwritten by process.env.HOST
+    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
@@ -63,7 +67,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist/releases'),
     assetsSubDirectory: version,
-    assetsPublicPath: 'https://cjunn.gitee.io/c_cnblog_vue/',
+    assetsPublicPath: 'https://cjunn.gitee.io/blog_theme_atum/',
 
     /**
      * Source Maps

@@ -28,11 +28,15 @@ input {
   outline: none;
   -webkit-appearance: none;
 }
-
+.none-base-scroll{
+  overflow-scrolling: touch;
+}
 .none-base-scroll::-webkit-scrollbar {
   display: none
 }
-
+.small-base-scroll{
+  overflow-scrolling: touch;
+}
 .small-base-scroll::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -53,7 +57,9 @@ input {
   border-radius: 5px;
   background-color: #c8c8c8;
 }
-
+.middle-base-scroll{
+  overflow-scrolling: touch;
+}
 .middle-base-scroll::-webkit-scrollbar {
   width: 7px;
   height: 7px;

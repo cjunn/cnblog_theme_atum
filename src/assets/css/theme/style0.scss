@@ -1,0 +1,63 @@
+.style0{
+  /*BODY样式表*/
+  .body-pic{
+  }
+  /*HEAD样式表*/
+  .head-back-color {
+    background-color: #3a3f51;
+  }
+
+  .head-brand-color {
+    color: rgba(234, 235, 237, 0.99);
+  }
+
+  .head-keyword-back-color {
+    background-color: rgba(234, 235, 237, 0.98);
+  }
+
+  .head-music-pic {
+  }
+  /*PANEL样式表*/
+  .panel-aside-back-color{
+    background-color: #edf1f2;
+  }
+  .panel-aside-color{
+    color: #4e5c64;
+  }
+
+  @for $i from 1 through 35
+  {
+    .panel-item-pic-#{$i}{
+
+    }
+  }
+
+  .panel-item-title-color{
+    color:rgb(50, 50, 50);
+  }
+
+  .panel-avatar-dec{
+    text-align: center;
+    padding: 20px;
+    img{
+      width: 90px;
+      height: 90px;
+      border-radius: 45px;
+    }
+  }
+
+  .panel-avatar-sign{
+    display: block;
+  }
+
+  .panel-right-img-style{
+    width: 45px;
+    height: 45px;
+    border-radius: 25px;
+  }
+  @for $i from 0 through 9
+  {
+    .panel-right-img-pic-#{$i}{
+    }
+  }
+}

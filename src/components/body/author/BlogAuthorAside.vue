@@ -40,28 +40,28 @@
 </template>
 
 <script>
-    import BlogKit from "../../../utils/BlogKit";
-    import BlogConst from "../../../const/BlogConst";
+    import blogKit from "../../../utils/BlogKit";
+    import BlogContext from "../../../context/BlogContext";
 
     export default {
         name: "BlogAuthorAside",
         methods: {
             qq: () => {
-                return BlogConst.qq;
+                return BlogContext.qq;
             },
             email: () => {
-                return BlogConst.email;
+                return BlogContext.email;
             },
             github: () => {
-                return BlogConst.github;
+                return BlogContext.github;
             }
         },
         data: () => {
             return {
-                emailImg: BlogKit.getExtendStylePath("/img/ing/email.png"),
-                qqImg: BlogKit.getExtendStylePath("/img/ing/qq.png"),
-                githubImg: BlogKit.getExtendStylePath("/img/ing/github.png"),
-                aboutmeHtml: BlogConst.aboutmeHtml,
+                emailImg: blogKit.getExtendStylePath("/img/ing/email.png"),
+                qqImg: blogKit.getExtendStylePath("/img/ing/qq.png"),
+                githubImg: blogKit.getExtendStylePath("/img/ing/github.png"),
+                aboutmeHtml: BlogContext.aboutmeHtml,
             }
         }
     }
@@ -72,7 +72,11 @@
     display: inline-block;
     vertical-align: top;
     position: absolute;
-    left: 880px;
+    bottom: 0px;
+    top: 0px;
+    border-left: 1px solid #dee5e7;
+    box-sizing: border-box;
+    transform: translateX(-1px);
     @include ingAsideLeft();
     @include deve4() {
       display: none;
@@ -80,7 +84,7 @@
     @include switchHeadBar() {
       display: none;
     }
-    width: 263px;
+    width: 255px;
     overflow-x: hidden;
     padding: 15px 18px 15px 18px;
     font-size: 0;

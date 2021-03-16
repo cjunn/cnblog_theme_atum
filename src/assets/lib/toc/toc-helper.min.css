@@ -1,7 +1,4 @@
-body {
-  font-size: 1rem;
-  line-height: 1.5
-}
+
 
 .toc, .toc * {
   -webkit-box-sizing: border-box;
@@ -36,6 +33,13 @@ body {
   transition: .2s
 }
 
+.toc.toc-fixed {
+  z-index: 1;
+}
+
+.toc-nav a {
+  margin-right: 0px !important;
+}
 .toc-brand {
   padding: 0 1.25rem;
   font-weight: 700;
@@ -123,25 +127,25 @@ body {
 }
 
 .toc-link.ml-1 {
-  margin-left: 1rem !important
+  padding-left: 2rem !important
 }
 
 .toc-link.ml-2 {
-  margin-left: 2rem !important
+  padding-left: 3rem !important
 }
 
 .toc-link.ml-3 {
-  margin-left: 3rem !important
+  padding-left: 4rem !important
 }
 
 .toc-link.ml-4 {
-  margin-left: 4rem !important
+  padding-left: 5rem !important
 }
 
 .toc-link.ml-5 {
-  margin-left: 5rem !important
+  padding-left: 6rem !important
 }
 
 .toc-link.ml-6 {
-  margin-left: 6rem !important
+  padding-left: 7rem !important
 }

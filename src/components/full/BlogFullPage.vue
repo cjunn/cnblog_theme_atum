@@ -24,7 +24,7 @@
 </template>
 
 <script>
-    import BlogUtils from "../../utils/BlogUtils";
+    import blogUtils from "../../utils/BlogUtils";
     import TocHelper from '../../assets/lib/toc/toc-helper';
     import $ from 'jquery';
 
@@ -67,7 +67,7 @@
                         });
                         tocHelper.reset();
                         this.isOpenFullScreen = true
-                        BlogUtils.registerAnchorFunc($("#post_body_fiex_menu_anchor"));
+                        blogUtils.registerAnchorFunc($("#post_body_fiex_menu_anchor"));
                         let topBtnDom = $("<span class='icon iconfont top topBtn topBtnDown'></span>");
                         $("#post_body_fiex_menu_anchor .toc-brand").append(topBtnDom);
                         /*滑动到上文或下文*/
@@ -100,6 +100,8 @@
 <style lang="scss">
 
   #blog_article_full_screen {
+    position: absolute;
+    z-index: 15;
     fade-enter-active, .fade-leave-active {
       opacity: 1;
     }
@@ -153,6 +155,8 @@
         text-align: center;
         padding: 20px;
         overflow-y: scroll;
+        overflow-scrolling: touch;
+        -webkit-overflow-scrolling: touch;
         z-index: 99 !important;
 
         .post-body-fiex-close {
@@ -175,7 +179,7 @@
           display: inline-block;
           position: fixed;
           margin-left: 10px;
-          top: 50px;
+          top: $headHeight;
           height: 800px;
           font-size: 12px;
 

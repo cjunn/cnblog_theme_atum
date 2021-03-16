@@ -10,16 +10,15 @@
 </template>
 
 <script>
-  import blogConst from "../../const/BlogConst";
-  import BlogEncryConst from "../../const/BlogEncryConst";
+  import BlogContext from "../../context/BlogContext";
 
   console.log(
-    BlogEncryConst.outPrint[0],
-    BlogEncryConst.outPrint[1],
-    BlogEncryConst.outPrint[2]
+    BlogContext.outPrint[0],
+    BlogContext.outPrint[1],
+    BlogContext.outPrint[2]
   );
-  let page = BlogEncryConst.myPage;
-  let detail = BlogEncryConst.myUrl;
+  let page = BlogContext.myPage;
+  let detail = BlogContext.myUrl;
   export default {
     name: "BlogBottom",
     methods: {
@@ -33,7 +32,7 @@
     data: () => {
       //建议这里改为 copyright 2020 博主名 theme 主题名（你博客链接）
       return {
-        copyright: 'Copyright © ' + new Date().getFullYear() + ' ' + blogConst.blogName,
+        copyright: 'Copyright © ' + new Date().getFullYear() + ' ' + BlogContext.blogName,
         plugName: "c_blog",
         author: "cjunn",
         technology: 'Powered by vue on cnblogs',

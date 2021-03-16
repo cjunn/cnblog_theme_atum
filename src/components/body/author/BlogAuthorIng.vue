@@ -17,7 +17,7 @@
                 <div class="head-info-title">文章</div>
               </div>
               <div class="head-author-info-item">
-                <div class="head-info-num">{{talkNum}}</div>
+                <div class="head-info-num">{{ingObj.count}}</div>
                 <div class="head-info-title">新鲜事</div>
               </div>
             </div>
@@ -38,81 +38,54 @@
         </div>
       </div>
     </div>
-    <div class="page-num" v-if="ingObj.current>0">
-      <ul class="pagination">
-        <li v-for="item in ingObj.pageList" @click="!isNaN(item.id)?current=item.id:''">
-          <a :class="{active:item.text==ingObj.current}">{{item.text}}</a>
-        </li>
-      </ul>
-    </div>
+
     <div class="author-body-wrap">
       <div class="author-content-item" v-for="item in ingObj.cnList">
         <div class="author-content-img-wrap">
-          <img :src="headImg">
+          <img :src="item.avatarHdUrl" :onerror="'this.src=\''+item.avatarUrl+'\';this.onerror=null;'">
         </div>
         <div class="author-content-body-wrap">
           <div class="author-content-arrow-back"></div>
           <div class="boadr-top-wrap">
             <span class="board-top-author">{{item.author}}</span>
-            <span class="board-top-time">{{item.time}}</span>
+            <span class="board-top-time">{{item.date}}</span>
           </div>
-          <div class="board-middle-wrap" v-html="item.content">
-            {{item.content}}
+          <div class="board-middle-wrap" v-html="item.desc">
+            {{item.desc}}
           </div>
           <div class="board-bottom-wrap">
-            <span class="heart-wrap"><span class="icon iconfont heart"></span><span>{{item.count}}</span></span>
-            <span><span class="icon iconfont Icon-Fixedposition- position"></span><span>{{item.from}}</span></span>
+            <span class="heart-wrap"><span class="icon iconfont heart"></span><span>{{item.digg||"0"}}</span></span>
+            <span><span class="icon iconfont Icon-Fixedposition- position"></span><span>{{item.from||"博客园"}}</span></span>
           </div>
         </div>
       </div>
     </div>
+    <pagination v-if="ingObj.pageNum" :page-size="ingObj.pageNum" :page-cur="ingObj.current" max-page="10" @clickPage="clickPage"></pagination>
+
   </div>
 </template>
 
 <script>
-    import BlogKit from "../../../utils/BlogKit";
-    import BlogApi from "../../../utils/BlogApi";
-    import blogConst from "../../../const/BlogConst";
-
+    import blogApi from "../../../utils/BlogApi";
+    import BlogContext from "../../../context/BlogContext";
+    import Pagination from "../../common/Pagination";
     export default {
-        name: "BlogAuthorIng",
-        created: function () {
+      name: "BlogAuthorIng",
+      components: {Pagination},
+      created: function () {
             Promise.all([
                 this.askIngList(),
                 this.askInfo(),
-                this.askImg(),
             ]).then(() => {
-                setTimeout(() => {
-                    this.$nextTick(() => {
-                        setTimeout(() => {
-                            this.$bus.emit('dataedRoute', true);
-                        }, 150)
-                    });
-                }, 150)
+              this.$bus.emit("fullLoadingClose");
             });
         },
-        computed: {
-            talkNum: function () {
-                if (this.ingObj.pageList.length == 0) {
-                    return this.ingObj.cnList.length;
-                }
-                return ((parseInt((this.ingObj.pageList[this.ingObj.pageList.length - 1].id)) - 1) * 30) + "+";
-            }
-        },
+
         methods: {
-            askImg: function () {
-                let self = this;
-                return new Promise((resolve, reject) => {
-                    BlogApi.loadAuthorHeadImg().then((srcData) => {
-                        self.headImg = srcData;
-                        resolve();
-                    })
-                });
-            },
             askInfo: function () {
                 let self = this;
                 return new Promise((resolve, reject) => {
-                    BlogApi.loadArticleNum().then((info) => {
+                    blogApi.loadArticleNum().then((info) => {
                         self.info = info;
                         resolve();
                     }).catch(() => {
@@ -122,11 +95,12 @@
             },
             askIngList: function (openLoadBar) {
                 let self = this;
-                openLoadBar ? this.$bus.emit("openLoadingBar", {}) : '';
+                openLoadBar ? this.$bus.emit("barLoadingOpen"): '';
                 return new Promise((resolve, reject) => {
-                    BlogApi.loadBlogTalk(this.current).then((data) => {
+                    blogApi.loadBlogTalk(this.current).then((data) => {
                         self.ingObj = data;
-                        openLoadBar ? this.$bus.emit("closeLoadingBar", {}) : '';
+                        self.ingObj.current=data.pageNum;
+                        openLoadBar ? this.$bus.emit("barLoadingClose") : '';
                         resolve();
                     }).catch(() => {
                         resolve();
@@ -134,22 +108,27 @@
                 });
             },
             ingTitle: () => {
-                return blogConst.ingTitle;
+                return BlogContext.ingTitle;
             },
             ingName: () => {
-                return blogConst.blogName;
+                return BlogContext.blogName;
+            },
+            clickPage:function(current){
+                this.current=current;
             }
         },
         data: () => {
             return {
-                headBackImg: blogConst.headBackImg,
-                headImg: '',
+                ingMinHeight:'',
+                headBackImg: BlogContext.headBackImg,
+
                 ingObj: {
                     cnList: [],
                     current: -1,
-                    pageList: [],
+                    pageNum: 0,
+                    count:0,
                 },
-                current: 1,
+                current: -1,
                 info: {}
             }
         },
@@ -171,7 +150,6 @@
     vertical-align: top;
     display: inline-block;
     box-sizing: border-box;
-    background-color: whitesmoke;
     border-right: 1px solid #dee5e7;
 
     .author-head-img-wrap {
@@ -191,6 +169,7 @@
         width: calc(100% + 2px);
         z-index: 0;
         position: absolute;
+        min-height: 100%;
       }
 
       .author-head-content {
@@ -305,16 +284,15 @@
       font-size: 13px;
       z-index: 2;
       width: 100%;
-      padding-top: 8px;
-      padding-bottom: 2px;
+      padding-top: 5px;
+      padding-bottom: 5px;
       border-bottom: 1px solid rgb(222, 229, 231);
       text-align: center;
       box-sizing: border-box;
-      background-color: rgb(248, 248, 248);
     }
 
     .author-body-wrap {
-      margin-bottom: 25px;
+      margin-bottom: 5px;
 
       .author-content-item:after {
         content: "";
@@ -328,7 +306,7 @@
       }
 
       .author-content-item:nth-last-of-type(1) {
-        padding-bottom: 40px;
+        padding-bottom: 30px;
       }
 
       .author-content-item:nth-of-type(1) {
@@ -360,7 +338,7 @@
           display: inline-block;
           vertical-align: top;
           padding-top: $itemTop;
-          z-index: 2;
+          z-index: 1;
 
           img {
             cursor: pointer;
@@ -470,7 +448,6 @@
             .heart {
               font-size: 14px;
               position: relative;
-              top: -3px;
             }
 
             .position {

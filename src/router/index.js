@@ -1,44 +1,50 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import BlogMain from '@/components/BlogMain'
+import blogRedirect from "../utils/BlogRedirect";
+import BlogPanel from "../components/BlogPanel";
+import CategoryBody from "../components/body/CategoryBody";
+import ArticleBody from "../components/body/article/ArticleBody";
+import SubjectBody from "../components/body/SubjectBody";
 import BlogAuthorBody from "../components/body/author/BlogAuthorBody";
-import BlogWorksBody from "../components/body/works/BlogWorksBody";
-import BlogCategory from "../components/body/works/BlogCategory";
-import BlogArticle from "../components/body/works/BlogArticle";
-import BlogTag from "../components/body/works/BlogTag";
-import BlogRedirect from "../utils/BlogRedirect";
-
 Vue.use(Router)
-
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 export default new Router({
   routes: [
     {
       path: '/',
       redirect: (e) => {
-        return BlogRedirect.redirect(e);
+        return blogRedirect.redirect(e);
       }
     },
     {
-      path: '/cnblog',
-      name: 'BlogMain',
-      component: BlogMain,
-      children: [
-        {path: 'author', component: BlogAuthorBody},
-        {
-          path: 'works',
-          component: BlogWorksBody,
-          children: [
-            {path: 'category/tag/:categoryId/:page', component: BlogTag, props: true},
-            {path: 'category/:categoryType/:categoryId/:page', component: BlogCategory, props: true},
-            {path: 'article/:pageId', component: BlogArticle, props: true},
-
+      path: process.env.VUE_CTX,
+      name: 'BlogPanel',
+      component: BlogPanel,
+      children: [{
+          path: 'subject/',
+          name:"SubjectBody",
+          component: SubjectBody,
+          redirect: "/",
+          children:[
+            {path: 'category/:categoryId' + '.html', component: CategoryBody},
+            {path: 'archive/:archiveYear/:archiveMonth' + '.html', component: CategoryBody},
+            {path: 'tag/:tagId/', component: CategoryBody},
+            {path: 'p/:articleId'+'.html',component: ArticleBody}
           ]
+        },
+        {
+          path: 'author/',
+          name:"AuthorBody",
+          component: BlogAuthorBody
         }
-      ]
+        ]
     },
     {
       path: '*',
       redirect: "/"
     }
   ]
-});
+})
